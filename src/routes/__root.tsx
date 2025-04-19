@@ -12,9 +12,6 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-
 import useStore from "@/store/store";
 import { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Link, Outlet, useRouter } from "@tanstack/react-router";
@@ -136,8 +133,6 @@ function RootComponent() {
         </div>
         <Outlet />
       </main>
-      <TanStackRouterDevtools position="bottom-right" />
-      <ReactQueryDevtools buttonPosition="bottom-right" />
     </SidebarProvider>
   );
 }
