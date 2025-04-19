@@ -13,4 +13,5 @@ export default defineConfig({
       "@": "/src",
     },
   },
+  base: '/ishopcare-channel-talk/',
 });
