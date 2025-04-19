@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^5.66.0",
+    "@tanstack/router-cli": "^1.116.0",
     "@tanstack/router-plugin": "^1.102.2",
     "@trivago/prettier-plugin-sort-imports": "github:trivago/prettier-plugin-sort-imports",
     "@types/node": "^22.13.4",
