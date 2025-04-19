@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "homepage": "https://ohshinyeop.github.io/ishopcare-channel-talk",
+  "homepage": "https://ohshinyeop.github.io/ishopcare-channel-talk/",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "dev": "vite --port=3000",
