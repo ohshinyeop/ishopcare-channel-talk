@@ -1,0 +1,29 @@
+export const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  ACCEPTED: 202,
+  NOCONTENT: 204,
+  BADREQUEST: 400,
+  FORBIDDEN: 403,
+  NOTFOUND: 404,
+  CONFLICT: 409,
+  SERVERERROR: 500,
+} as const;
+
+export const HTTP_METHOD = {
+  GET: "GET",
+  POST: "POST",
+  PATCH: "PATCH",
+  DELETE: "DELETE",
+  PUT: "PUT",
+} as const;
+
+export const NOT_FOUND_EXCEPTION_TYPE = {
+  USER: "USER",
+} as const;
+
+export const FORBIDDEN_EXCEPTION_TYPE = {
+  INVALID_STATUS: "INVALID_STATUS",
+  INVALID_PASSWORD: "INVALID_PASSWORD",
+  SAME_PASSWORD: "SAME_PASSWORD",
+} as const;
