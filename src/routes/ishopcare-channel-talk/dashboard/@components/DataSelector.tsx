@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { TableProps } from "@/routes/dashboard/@type/type";
+import { TableProps } from "@/routes/ishopcare-channel-talk/dashboard/@type/type";
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import React, { useMemo } from "react";
 
@@ -45,6 +45,7 @@ const DataSelector: React.FC<DataSelectorProps> = ({ excelHeaders, allHeaders, s
         accessorKey: header,
         header: header,
         cell: (info) => info.getValue(),
+        size: 300,
       })),
     [excelHeaders],
   );
@@ -107,7 +108,7 @@ const DataSelector: React.FC<DataSelectorProps> = ({ excelHeaders, allHeaders, s
           </div>
           <div className="h-0.5 bg-gray-300"></div>
 
-          <div className="max-h-[500px] overflow-auto flex">
+          <div className="max-h-[500px] overflow-hidden">
             <Table>
               <TableHeader>
                 {rawDataTable.getHeaderGroups().map((headerGroup) => (

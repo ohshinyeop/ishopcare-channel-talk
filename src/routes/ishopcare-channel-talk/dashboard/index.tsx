@@ -1,11 +1,11 @@
-import DataSelector from "@/routes/dashboard/@components/DataSelector";
-import DataTable from "@/routes/dashboard/@components/DataTable";
-import ExcelUploader from "@/routes/dashboard/@components/ExcelUploader";
-import { TableProps } from "@/routes/dashboard/@type/type";
+import DataSelector from "@/routes/ishopcare-channel-talk/dashboard/@components/DataSelector";
+import DataTable from "@/routes/ishopcare-channel-talk/dashboard/@components/DataTable";
+import ExcelUploader from "@/routes/ishopcare-channel-talk/dashboard/@components/ExcelUploader";
+import { TableProps } from "@/routes/ishopcare-channel-talk/dashboard/@type/type";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-export const Route = createFileRoute("/dashboard/")({
+export const Route = createFileRoute("/ishopcare-channel-talk/dashboard/")({
   component: RouteComponent,
 });
 

@@ -11,39 +11,40 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as IndexImport } from './routes/index'
-import { Route as DashboardIndexImport } from './routes/dashboard/index'
+import { Route as IshopcareChannelTalkIndexImport } from './routes/ishopcare-channel-talk/index'
+import { Route as IshopcareChannelTalkDashboardIndexImport } from './routes/ishopcare-channel-talk/dashboard/index'
 
 // Create/Update Routes
 
-const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
+const IshopcareChannelTalkIndexRoute = IshopcareChannelTalkIndexImport.update({
+  id: '/ishopcare-channel-talk/',
+  path: '/ishopcare-channel-talk/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const DashboardIndexRoute = DashboardIndexImport.update({
-  id: '/dashboard/',
-  path: '/dashboard/',
-  getParentRoute: () => rootRoute,
-} as any)
+const IshopcareChannelTalkDashboardIndexRoute =
+  IshopcareChannelTalkDashboardIndexImport.update({
+    id: '/ishopcare-channel-talk/dashboard/',
+    path: '/ishopcare-channel-talk/dashboard/',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+    '/ishopcare-channel-talk/': {
+      id: '/ishopcare-channel-talk/'
+      path: '/ishopcare-channel-talk'
+      fullPath: '/ishopcare-channel-talk'
+      preLoaderRoute: typeof IshopcareChannelTalkIndexImport
       parentRoute: typeof rootRoute
     }
-    '/dashboard/': {
-      id: '/dashboard/'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardIndexImport
+    '/ishopcare-channel-talk/dashboard/': {
+      id: '/ishopcare-channel-talk/dashboard/'
+      path: '/ishopcare-channel-talk/dashboard'
+      fullPath: '/ishopcare-channel-talk/dashboard'
+      preLoaderRoute: typeof IshopcareChannelTalkDashboardIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -52,38 +53,42 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardIndexRoute
+  '/ishopcare-channel-talk': typeof IshopcareChannelTalkIndexRoute
+  '/ishopcare-channel-talk/dashboard': typeof IshopcareChannelTalkDashboardIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardIndexRoute
+  '/ishopcare-channel-talk': typeof IshopcareChannelTalkIndexRoute
+  '/ishopcare-channel-talk/dashboard': typeof IshopcareChannelTalkDashboardIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/dashboard/': typeof DashboardIndexRoute
+  '/ishopcare-channel-talk/': typeof IshopcareChannelTalkIndexRoute
+  '/ishopcare-channel-talk/dashboard/': typeof IshopcareChannelTalkDashboardIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard'
+  fullPaths: '/ishopcare-channel-talk' | '/ishopcare-channel-talk/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard'
-  id: '__root__' | '/' | '/dashboard/'
+  to: '/ishopcare-channel-talk' | '/ishopcare-channel-talk/dashboard'
+  id:
+    | '__root__'
+    | '/ishopcare-channel-talk/'
+    | '/ishopcare-channel-talk/dashboard/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  DashboardIndexRoute: typeof DashboardIndexRoute
+  IshopcareChannelTalkIndexRoute: typeof IshopcareChannelTalkIndexRoute
+  IshopcareChannelTalkDashboardIndexRoute: typeof IshopcareChannelTalkDashboardIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  DashboardIndexRoute: DashboardIndexRoute,
+  IshopcareChannelTalkIndexRoute: IshopcareChannelTalkIndexRoute,
+  IshopcareChannelTalkDashboardIndexRoute:
+    IshopcareChannelTalkDashboardIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -96,15 +101,15 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/dashboard/"
+        "/ishopcare-channel-talk/",
+        "/ishopcare-channel-talk/dashboard/"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
+    "/ishopcare-channel-talk/": {
+      "filePath": "ishopcare-channel-talk/index.tsx"
     },
-    "/dashboard/": {
-      "filePath": "dashboard/index.tsx"
+    "/ishopcare-channel-talk/dashboard/": {
+      "filePath": "ishopcare-channel-talk/dashboard/index.tsx"
     }
   }
 }

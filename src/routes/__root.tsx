@@ -34,12 +34,12 @@ const NAVI_LINKS: {
   icon: React.ComponentType;
 }[] = [
   {
-    to: "/",
+    to: "/ishopcare-channel-talk/",
     label: "홈",
     icon: Home,
   },
   {
-    to: "/dashboard",
+    to: "/ishopcare-channel-talk/dashboard",
     label: "대시보드",
     icon: Search,
   },

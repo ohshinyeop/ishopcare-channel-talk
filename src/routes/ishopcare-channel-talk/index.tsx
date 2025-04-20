@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import LoadingPage from "@/components/commons/LoadingPage";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/ishopcare-channel-talk/")({
   component: HomeComponent,
   pendingComponent: () => <LoadingPage />,
 });
@@ -20,6 +20,11 @@ function HomeComponent() {
         alt="intro"
         className="object-cover rounded-lg shadow-lg"
       />
+      <div>
+        <li>아래 2개 테이블에 채크박스 만들기</li>
+        <li>날짜 선택 범위로</li>
+        <li>테이블 전체 합</li>
+      </div>
       <footer className="mt-6 text-gray-500 text-sm">Made by 오신엽</footer>
     </div>
   );

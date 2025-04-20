@@ -3,9 +3,10 @@ import React, { useEffect, useRef } from "react";
 
 interface DataChartProps {
   data: { tag: string; count: number }[];
+  title?: string;
 }
 
-const DataChart: React.FC<DataChartProps> = ({ data }) => {
+const DataChart: React.FC<DataChartProps> = ({ data, title }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -42,7 +43,7 @@ const DataChart: React.FC<DataChartProps> = ({ data }) => {
           },
         },
         title: {
-          text: "일별 채널톡 파트 응답수",
+          text: title || "Data Chart",
           left: "center",
           textStyle: {
             fontSize: 16,
@@ -56,6 +57,7 @@ const DataChart: React.FC<DataChartProps> = ({ data }) => {
           axisLabel: {
             interval: 0,
             fontSize: 11,
+            rotate: 35,
           },
         },
         yAxis: {
