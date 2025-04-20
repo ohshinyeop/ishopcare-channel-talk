@@ -8,7 +8,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { format } from "date-fns";
+import { format, formatDate } from "date-fns";
 import { ArrowDownUp, CalendarIcon, MoveDown, MoveUp } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 import DataChart from "./DataChart";
@@ -28,11 +28,20 @@ interface DataTableProps {
 const MY_TEAM_NAME = ["슬기", "동민", "보라", "지은", "세훈", "인섭", "소라"];
 
 const DataTable: React.FC<DataTableProps> = ({ data }) => {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [selectedDate, setSelectedDate] = useState<{
+    startDate: Date;
+    endDate: Date;
+  }>({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
 
   const filteredData = useMemo(() => {
     // data에서 key값의 앞 4자리가 오늘 date.format(MMDD)와 같은지 확인
-    const date = format(selectedDate ?? new Date(), "MMdd");
+    const date = format(selectedDate.startDate ?? new Date(), "MMdd");
+
+    const dateStart = format(selectedDate.startDate ?? new Date(), "MMdd");
+    const dateEnd = format(selectedDate.endDate ?? new Date(), "MMdd");
 
     // data의 각 행에서 tags를 가져와서
     // tags를 쉼표로 분리하였을때 regex = /^\d{4}([가-힣]{2})$/; 형태 이면서 startsWith(date)인 것들만 반환
@@ -44,7 +53,16 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
         if (match) {
           const word = match[0];
           if (word) {
-            return word.startsWith(date);
+            // return word.startsWith(date);
+            // word앞 4자리가 dateStart와 dateEnd 사이에 있는지 확인
+            const wordDate = word.substring(0, 4);
+            const wordDateNum = parseInt(wordDate, 10);
+            const dateStartNum = parseInt(dateStart, 10);
+            const dateEndNum = parseInt(dateEnd, 10);
+            if (wordDateNum >= dateStartNum && wordDateNum <= dateEndNum) {
+              return true;
+            }
+            // return word.startsWith(date);
           }
         }
         return false;
@@ -156,7 +174,11 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
 
   const tableDataPeople = useMemo(() => {
     const count: Record<string, number> = {};
-    const date = format(selectedDate ?? new Date(), "MMdd");
+    const date = format(selectedDate.startDate ?? new Date(), "MMdd");
+
+    const dateStart = format(selectedDate.startDate ?? new Date(), "MMdd");
+    const dateEnd = format(selectedDate.endDate ?? new Date(), "MMdd");
+
     filteredData.forEach((item) => {
       const tags = item.tags?.split(", ") || [];
       tags.forEach((tag) => {
@@ -165,8 +187,19 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
         if (match && MY_TEAM_NAME.some((name) => tag.includes(name))) {
           const word = match[0];
           if (word) {
-            if (!word.startsWith(date)) {
-              return;
+            if (word.startsWith(date)) {
+              // word앞 4자리가 dateStart와 dateEnd 사이에 있는지 확인
+              const wordDate = word.substring(0, 4);
+              const wordDateNum = parseInt(wordDate, 10);
+              const dateStartNum = parseInt(dateStart, 10);
+              const dateEndNum = parseInt(dateEnd, 10);
+              if (wordDateNum >= dateStartNum && wordDateNum <= dateEndNum) {
+                if (count[word]) {
+                  count[word]++;
+                } else {
+                  count[word] = 1;
+                }
+              }
             } else if (count[word]) {
               count[word]++;
             } else {
@@ -254,20 +287,60 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
 
   return (
     <div className="w-full h-full overflow-auto flex flex-col gap-3">
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant={"outline"}
-            className={cn("w-[240px] justify-start text-left font-normal", !selectedDate && "text-muted-foreground")}
-          >
-            <CalendarIcon />
-            {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
-          <Calendar mode="single" selected={selectedDate} onSelect={setSelectedDate} initialFocus />
-        </PopoverContent>
-      </Popover>
+      <div className="w-full gap-3 flex">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn("w-[240px] justify-start text-left font-normal", !selectedDate && "text-muted-foreground")}
+            >
+              <CalendarIcon />
+              {selectedDate.startDate ? (
+                formatDate(selectedDate.startDate, "yyyy-MM-dd")
+              ) : (
+                <span>Pick a start date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={selectedDate.startDate}
+              onSelect={(date) => {
+                setSelectedDate((prev) => ({
+                  ...prev,
+                  startDate: date ?? new Date(),
+                }));
+              }}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn("w-[240px] justify-start text-left font-normal", !selectedDate && "text-muted-foreground")}
+            >
+              <CalendarIcon />
+              {selectedDate.endDate ? formatDate(selectedDate.endDate, "yyyy-MM-dd") : <span>Pick a end end date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={selectedDate.endDate}
+              onSelect={(date) => {
+                setSelectedDate((prev) => ({
+                  ...prev,
+                  endDate: date ?? new Date(),
+                }));
+              }}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
       {tableDataGeneralTags.length > 0 ? (
         <div className="wf-full grid grid-cols-[max-content_1fr] gap-3">
           <div className="border border-gray-300 rounded-md overflow-y-hidden">

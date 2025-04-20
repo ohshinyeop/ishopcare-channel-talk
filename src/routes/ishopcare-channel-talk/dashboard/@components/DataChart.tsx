@@ -56,7 +56,7 @@ const DataChart: React.FC<DataChartProps> = ({ data, title }) => {
           data: data.map((item) => item.tag),
           axisLabel: {
             interval: 0,
-            fontSize: 11,
+            fontSize: 14,
             rotate: 35,
           },
         },

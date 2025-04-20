@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { FileInput, FileUploader, FileUploaderContent } from "@/components/ui/file-upload";
 import { TableProps } from "@/routes/ishopcare-channel-talk/dashboard/@type/type";
+import useStore from "@/store/store";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { FileUp } from "lucide-react";
 import React from "react";
@@ -14,8 +15,10 @@ interface Props {
 
 const ExcelUploader = ({ excelData, setExcelData }: Props) => {
   const [files, setFiles] = React.useState<File[]>([]);
+  const setLoading = useStore((state) => state.setLoading);
 
-  const handleFileUpload = (file: File[] | null) => {
+  const handleFileUpload = async (file: File[] | null) => {
+    setLoading(true);
     if (!file) return;
     setFiles(file);
 
@@ -36,6 +39,10 @@ const ExcelUploader = ({ excelData, setExcelData }: Props) => {
     };
     if (!file[0]) return;
     reader.readAsBinaryString(file[0]);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   };
 
   const dropZoneConfig = {
