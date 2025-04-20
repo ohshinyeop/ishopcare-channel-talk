@@ -65,7 +65,7 @@ const DataChart: React.FC<DataChartProps> = ({ data, title }) => {
         },
         series: [
           {
-            data: data.map((item) => item.count).sort((a, b) => a - b),
+            data: data.map((item) => item.count),
             type: "bar",
             color: "#2e93ff",
             label: {

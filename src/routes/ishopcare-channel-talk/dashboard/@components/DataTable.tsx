@@ -1,20 +1,22 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
+  RowSelectionState,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ArrowDownUp, CalendarIcon, MoveDown, MoveUp } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import DataChart from "./DataChart";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { TableProps } from "@/routes/ishopcare-channel-talk/dashboard/@type/type";
@@ -22,6 +24,8 @@ import { TableProps } from "@/routes/ishopcare-channel-talk/dashboard/@type/type
 interface DataTableProps {
   data: TableProps[];
 }
+
+const MY_TEAM_NAME = ["슬기", "동민", "보라", "지은", "세훈", "인섭", "소라"];
 
 const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
@@ -59,6 +63,29 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   >(() => {
     return [
       {
+        accessorKey: "checkbox",
+        enableSorting: false,
+        header: ({ table }) => {
+          return (
+            <div>
+              <Checkbox
+                id="select-all"
+                checked={table.getIsSomeRowsSelected() ? "indeterminate" : table.getIsAllRowsSelected()}
+                onCheckedChange={() => table.toggleAllRowsSelected()}
+              />
+            </div>
+          );
+        },
+        cell: ({ row }) => {
+          return (
+            <div>
+              <Checkbox id={row.id} checked={row.getIsSelected()} onCheckedChange={row.getToggleSelectedHandler()} />
+            </div>
+          );
+        },
+        size: 50,
+      },
+      {
         accessorKey: "tag",
         header: "tag",
         cell: (info) => info.getValue(),
@@ -68,7 +95,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
         accessorKey: "count",
         header: "Count",
         cell: (info) => info.getValue(),
-        size: 50,
+        size: 100,
       },
     ];
   }, []);
@@ -81,6 +108,8 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
         // 모든 태그를 가져와서 카운트
         const tagList = tag.split(", ");
         tagList.forEach((tag) => {
+          // mmddMY_TEAM_NAME으로
+          // if (tag.match(/^\d{4}([가-힣]{2})$/)) {
           if (tag.match(/^\d{4}([가-힣]{2})$/)) {
             return;
           } else if (count[tag]) {
@@ -104,15 +133,18 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
       desc: true,
     },
   ]);
+  const [rowSelectionGeneral, setRowSelectionGeneral] = useState<RowSelectionState>({}); //manage your own row selection state
+
   const generalTagTable = useReactTable({
     data: tableDataGeneralTags,
     columns: columnsGeneralTags,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSortingGeneral,
     getSortedRowModel: getSortedRowModel(), //client-side sorting
-
+    onRowSelectionChange: setRowSelectionGeneral, //hoist up the row selection state to your own scope
     state: {
       sorting: sortingGeneral,
+      rowSelection: rowSelectionGeneral,
     },
   });
 
@@ -130,7 +162,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
       tags.forEach((tag) => {
         const regex = /^\d{4}([가-힣]{2})$/;
         const match = tag.match(regex);
-        if (match) {
+        if (match && MY_TEAM_NAME.some((name) => tag.includes(name))) {
           const word = match[0];
           if (word) {
             if (!word.startsWith(date)) {
@@ -159,6 +191,29 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   >(() => {
     return [
       {
+        accessorKey: "checkbox",
+        enableSorting: false,
+        header: ({ table }) => {
+          return (
+            <div>
+              <Checkbox
+                id="select-all"
+                checked={table.getIsSomeRowsSelected() ? "indeterminate" : table.getIsAllRowsSelected()}
+                onCheckedChange={() => table.toggleAllRowsSelected()}
+              />
+            </div>
+          );
+        },
+        cell: ({ row }) => {
+          return (
+            <div>
+              <Checkbox id={row.id} checked={row.getIsSelected()} onCheckedChange={row.getToggleSelectedHandler()} />
+            </div>
+          );
+        },
+        size: 50,
+      },
+      {
         accessorKey: "tag",
         header: "Tag",
         cell: (info) => info.getValue(),
@@ -168,7 +223,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
         accessorKey: "count",
         header: "Count",
         cell: (info) => info.getValue(),
-        size: 50,
+        size: 100,
       },
     ];
   }, []);
@@ -178,16 +233,24 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
       desc: true,
     },
   ]);
+  const [rowSelectionPeople, setRowSelectionPeople] = useState<RowSelectionState>({}); //manage your own row selection state
   const peopleTable = useReactTable({
     data: tableDataPeople,
     columns: columnsPeople,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(), //client-side sorting
+    onRowSelectionChange: setRowSelectionPeople, //hoist up the row selection state to your own scope
     state: {
       sorting: sorting,
+      rowSelection: rowSelectionPeople,
     },
   });
+
+  useEffect(() => {
+    generalTagTable.toggleAllRowsSelected(true);
+    peopleTable.toggleAllRowsSelected(true);
+  }, [selectedDate]);
 
   return (
     <div className="w-full h-full overflow-auto flex flex-col gap-3">
@@ -214,7 +277,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <TableHead
-                        className=" cursor-pointer"
+                        className="cursor-pointer"
                         key={header.id}
                         style={{ width: header.getSize() }}
                         onClick={header.column.getToggleSortingHandler()}
@@ -223,10 +286,13 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
                           {header.isPlaceholder
                             ? null
                             : flexRender(header.column.columnDef.header, header.getContext())}
-                          {!header.column.getIsSorted() && <ArrowDownUp className="w-4 h-4" />}
-
-                          {header.column.getIsSorted() === "asc" && <MoveUp className="w-4 h-4" />}
-                          {header.column.getIsSorted() === "desc" && <MoveDown className="w-4 h-4" />}
+                          {header.column.getCanSort() && (
+                            <div className="flex items-center w-full justify-end">
+                              {!header.column.getIsSorted() && <ArrowDownUp className="w-4 h-4" />}
+                              {header.column.getIsSorted() === "asc" && <MoveUp className="w-4 h-4" />}
+                              {header.column.getIsSorted() === "desc" && <MoveDown className="w-4 h-4" />}
+                            </div>
+                          )}
                         </div>
                       </TableHead>
                     ))}
@@ -234,7 +300,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
                 ))}
               </TableHeader>
             </Table>
-            <Table className="overflow-y-scroll flex h-[700px]">
+            <Table className="overflow-y-auto flex max-h-[700px]">
               <TableBody>
                 {generalTagTable.getRowModel().rows.map((row) => {
                   return (
@@ -249,9 +315,48 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
                 })}
               </TableBody>
             </Table>
+            <Table>
+              <TableFooter>
+                {/* 각 열의 sum */}
+                {generalTagTable.getFooterGroups().map((footerGroup) => (
+                  <TableRow key={footerGroup.id}>
+                    {footerGroup.headers.map((header) => {
+                      return (
+                        <TableCell key={header.id} style={{ width: header.getSize() }}>
+                          {header.column.id === "count" ? (
+                            <div className="text-right">
+                              {generalTagTable
+                                .getCoreRowModel()
+                                .rows.reduce((sum, row) => sum + Number(row.getValue(header.id)), 0)}
+                            </div>
+                          ) : null}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))}
+              </TableFooter>
+            </Table>
           </div>
           <Card>
-            <DataChart title="일별 채널톡 태그수" data={tableDataGeneralTags}></DataChart>
+            <DataChart
+              title="일별 채널톡 태그수"
+              data={
+                // generalTagTable 중에서 row.getIsSelected()인 것들만
+                generalTagTable
+                  .getRowModel()
+                  .rows.filter((row) => row.getIsSelected())
+                  .map((row) => {
+                    const tag = row.getValue("tag");
+                    const count = row.getValue("count");
+                    return {
+                      tag: tag as string,
+                      count: count as number,
+                    };
+                  })
+                  .sort((a, b) => a.count - b.count)
+              }
+            ></DataChart>
           </Card>
           <div className="border border-gray-300 rounded-md overflow-y-hidden">
             <Table>
@@ -269,9 +374,13 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
                           {header.isPlaceholder
                             ? null
                             : flexRender(header.column.columnDef.header, header.getContext())}
-                          {!header.column.getIsSorted() && <ArrowDownUp className="w-4 h-4" />}
-                          {header.column.getIsSorted() === "asc" && <MoveUp className="w-4 h-4" />}
-                          {header.column.getIsSorted() === "desc" && <MoveDown className="w-4 h-4" />}
+                          {header.column.getCanSort() && (
+                            <>
+                              {!header.column.getIsSorted() && <ArrowDownUp className="w-4 h-4" />}
+                              {header.column.getIsSorted() === "asc" && <MoveUp className="w-4 h-4" />}
+                              {header.column.getIsSorted() === "desc" && <MoveDown className="w-4 h-4" />}
+                            </>
+                          )}
                         </div>
                       </TableHead>
                     ))}
@@ -279,7 +388,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
                 ))}
               </TableHeader>
             </Table>
-            <Table className="overflow-y-scroll flex h-[700px]">
+            <Table className="overflow-y-auto flex max-h-[700px]">
               <TableBody>
                 {peopleTable.getRowModel().rows.map((row) => (
                   <TableRow key={row.id}>
@@ -292,9 +401,48 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
                 ))}
               </TableBody>
             </Table>
+            <Table>
+              <TableFooter>
+                {/* 각 열의 sum */}
+                {peopleTable.getFooterGroups().map((footerGroup) => (
+                  <TableRow key={footerGroup.id}>
+                    {footerGroup.headers.map((header) => {
+                      return (
+                        <TableCell key={header.id} style={{ width: header.getSize() }}>
+                          {header.column.id === "count" ? (
+                            <div className="text-right">
+                              {peopleTable
+                                .getCoreRowModel()
+                                .rows.reduce((sum, row) => sum + Number(row.getValue(header.id)), 0)}
+                            </div>
+                          ) : null}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                ))}
+              </TableFooter>
+            </Table>
           </div>
           <Card>
-            <DataChart title="일별 채널톡 파트 응답수" data={tableDataPeople}></DataChart>
+            <DataChart
+              title="일별 채널톡 파트 응답수"
+              data={
+                // peopleTable 중에서 row.getIsSelected()인 것들만
+                peopleTable
+                  .getRowModel()
+                  .rows.filter((row) => row.getIsSelected())
+                  .map((row) => {
+                    const tag = row.getValue("tag");
+                    const count = row.getValue("count");
+                    return {
+                      tag: tag as string,
+                      count: count as number,
+                    };
+                  })
+                  .sort((a, b) => a.count - b.count)
+              }
+            ></DataChart>
           </Card>
         </div>
       ) : (

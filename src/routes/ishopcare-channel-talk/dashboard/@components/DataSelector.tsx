@@ -45,7 +45,6 @@ const DataSelector: React.FC<DataSelectorProps> = ({ excelHeaders, allHeaders, s
         accessorKey: header,
         header: header,
         cell: (info) => info.getValue(),
-        size: 300,
       })),
     [excelHeaders],
   );
@@ -107,14 +106,13 @@ const DataSelector: React.FC<DataSelectorProps> = ({ excelHeaders, allHeaders, s
             ))}
           </div>
           <div className="h-0.5 bg-gray-300"></div>
-
-          <div className="max-h-[500px] overflow-hidden">
+          <div className="border border-gray-300 rounded-md max-h-[500px] overflow-auto flex">
             <Table>
               <TableHeader>
                 {rawDataTable.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
+                  <TableRow key={headerGroup.id} className="table-row">
                     {headerGroup.headers.map((header) => (
-                      <TableHead className="border-r" key={header.id}>
+                      <TableHead key={header.id}>
                         {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                       </TableHead>
                     ))}
@@ -123,11 +121,9 @@ const DataSelector: React.FC<DataSelectorProps> = ({ excelHeaders, allHeaders, s
               </TableHeader>
               <TableBody>
                 {rawDataTable.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
+                  <TableRow key={row.id} className="table-row">
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell className="border-r" key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
+                      <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                     ))}
                   </TableRow>
                 ))}
