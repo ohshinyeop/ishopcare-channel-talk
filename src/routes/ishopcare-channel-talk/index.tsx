@@ -18,14 +18,9 @@ function HomeComponent() {
       <img
         src="https://framerusercontent.com/images/RzZ7S9CD9MwLV6fZUlSeGX61c.png"
         alt="intro"
-        className="object-cover rounded-lg shadow-lg"
+        className="object-cover rounded-lg shadow-lg w-96"
       />
-      <div>
-        <li>아래 2개 테이블에 채크박스 만들기</li>
-        <li>날짜 선택 범위로</li>
-        <li>테이블 전체 합</li>
-      </div>
-      <footer className="mt-6 text-gray-500 text-sm">Made by 오신엽</footer>
+      <footer className="fixed text-md bottom-5 right-5 mt-6 text-gray-500">Made by Wade Oh</footer>
     </div>
   );
 }

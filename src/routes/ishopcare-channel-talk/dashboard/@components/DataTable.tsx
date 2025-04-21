@@ -11,7 +11,6 @@ import {
 import { format, formatDate } from "date-fns";
 import { ArrowDownUp, CalendarIcon, MoveDown, MoveUp } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
-import DataChart from "./DataChart";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -20,12 +19,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { TableProps } from "@/routes/ishopcare-channel-talk/dashboard/@type/type";
+import { DataChartGeneralTags } from "./DataChartGeneralTags";
+import { DataChartGeneralTagsTop } from "./DataChartGeneralTagsTop";
+import { DataChartPeople } from "./DataChartPeople";
+import { DataChartPeopleDays } from "./DataChartPeopleDays";
 
 interface DataTableProps {
   data: TableProps[];
 }
 
-const MY_TEAM_NAME = ["슬기", "동민", "보라", "지은", "세훈", "인섭", "소라"];
+const MY_TEAM_NAME = ["슬기", "동민", "보라", "지은", "세훈", "인섭", "소라", "선민"];
 
 const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const [selectedDate, setSelectedDate] = useState<{
@@ -343,6 +346,8 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
       </div>
       {tableDataGeneralTags.length > 0 ? (
         <div className="wf-full grid grid-cols-[max-content_1fr] gap-3">
+          {/* <DataChartGeneralTags selectedDate={selectedDate} filteredData={filteredData} />
+          <DataChartPeople selectedDate={selectedDate} filteredData={filteredData} /> */}
           <div className="border border-gray-300 rounded-md overflow-y-hidden">
             <Table>
               <TableHeader>
@@ -373,7 +378,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
                 ))}
               </TableHeader>
             </Table>
-            <Table className="overflow-y-auto flex max-h-[700px]">
+            <Table className="overflow-y-auto flex max-h-[1000px]">
               <TableBody>
                 {generalTagTable.getRowModel().rows.map((row) => {
                   return (
@@ -411,26 +416,14 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
               </TableFooter>
             </Table>
           </div>
-          <Card>
-            <DataChart
-              title="일별 채널톡 태그수"
-              data={
-                // generalTagTable 중에서 row.getIsSelected()인 것들만
-                generalTagTable
-                  .getRowModel()
-                  .rows.filter((row) => row.getIsSelected())
-                  .map((row) => {
-                    const tag = row.getValue("tag");
-                    const count = row.getValue("count");
-                    return {
-                      tag: tag as string,
-                      count: count as number,
-                    };
-                  })
-                  .sort((a, b) => a.count - b.count)
-              }
-            ></DataChart>
-          </Card>
+          <div className="wf-full flex flex-col gap-3">
+            <Card>
+              <DataChartGeneralTags generalTagTable={generalTagTable} selectedDate={selectedDate} />
+            </Card>
+            <Card className="p-3 w-full h-full flex flex-col">
+              <DataChartGeneralTagsTop generalTagTable={generalTagTable} selectedDate={selectedDate} />
+            </Card>
+          </div>
           <div className="border border-gray-300 rounded-md overflow-y-hidden">
             <Table>
               <TableHeader>
@@ -497,26 +490,14 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
               </TableFooter>
             </Table>
           </div>
-          <Card>
-            <DataChart
-              title="일별 채널톡 파트 응답수"
-              data={
-                // peopleTable 중에서 row.getIsSelected()인 것들만
-                peopleTable
-                  .getRowModel()
-                  .rows.filter((row) => row.getIsSelected())
-                  .map((row) => {
-                    const tag = row.getValue("tag");
-                    const count = row.getValue("count");
-                    return {
-                      tag: tag as string,
-                      count: count as number,
-                    };
-                  })
-                  .sort((a, b) => a.count - b.count)
-              }
-            ></DataChart>
-          </Card>
+          <div className="wf-full flex flex-col gap-3">
+            <Card>
+              <DataChartPeople peopleTable={peopleTable} selectedDate={selectedDate} />
+            </Card>
+            <Card className="p-3 w-full h-full flex flex-col">
+              <DataChartPeopleDays peopleTable={peopleTable} selectedDate={selectedDate} />
+            </Card>
+          </div>
         </div>
       ) : (
         <Card className="w-full h-full flex justify-center items-center">

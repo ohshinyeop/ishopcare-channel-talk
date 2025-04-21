@@ -1,5 +1,3 @@
-"use client";
-
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -304,7 +302,6 @@ export const FileInput = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
         </div>
         <Input
           ref={dropzoneState.inputRef}
-          disabled={isLOF}
           {...dropzoneState.getInputProps()}
           className={`${isLOF ? "cursor-not-allowed" : ""}`}
         />

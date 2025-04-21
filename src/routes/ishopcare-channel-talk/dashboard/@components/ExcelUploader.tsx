@@ -9,11 +9,10 @@ import React from "react";
 import * as XLSX from "xlsx";
 
 interface Props {
-  excelData: TableProps[];
   setExcelData: React.Dispatch<React.SetStateAction<TableProps[]>>;
 }
 
-const ExcelUploader = ({ excelData, setExcelData }: Props) => {
+const ExcelUploader = ({ setExcelData }: Props) => {
   const [files, setFiles] = React.useState<File[]>([]);
   const setLoading = useStore((state) => state.setLoading);
 
@@ -42,7 +41,7 @@ const ExcelUploader = ({ excelData, setExcelData }: Props) => {
 
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 1500);
   };
 
   const dropZoneConfig = {
@@ -74,11 +73,25 @@ const ExcelUploader = ({ excelData, setExcelData }: Props) => {
               </div>
             </Button>
           </FileInput>
-          <FileUploaderContent className="p-3">
-            <div className="wf-full flex items-center justify-center h-full">
-              <div className="text-sm text-gray-500">{files[0]?.name}</div>
-            </div>
-          </FileUploaderContent>
+          {files.length > 0 && (
+            <FileUploaderContent className="flex items-center h-full">
+              <div className="p-3 flex w-full h-full gap-3 justify-center">
+                <div className="w-fit">
+                  <div className="text-sm text-gray-500">{files[0]?.name}</div>
+                </div>
+                <Button
+                  onClick={() => {
+                    setFiles([]);
+                    setExcelData([]);
+                  }}
+                  variant={"outline"}
+                  className="h-3 w-3 py-3"
+                >
+                  X
+                </Button>
+              </div>
+            </FileUploaderContent>
+          )}
         </FileUploader>
       </Card>
     </div>

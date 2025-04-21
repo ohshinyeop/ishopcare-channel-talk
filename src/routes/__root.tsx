@@ -11,6 +11,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 import useStore from "@/store/store";
 import { QueryClient } from "@tanstack/react-query";
@@ -86,7 +87,7 @@ function RootComponent() {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton className="py-0 hover:bg-transparent h-fit">
-                <Link to="/" className="flex items-center w-fit gap-2">
+                <Link to="/ishopcare-channel-talk" className="flex items-center w-fit gap-2">
                   <img
                     src="https://framerusercontent.com/images/RzZ7S9CD9MwLV6fZUlSeGX61c.png"
                     alt="intro"
@@ -132,6 +133,7 @@ function RootComponent() {
           {currentTitle}
         </div>
         <Outlet />
+        <Toaster />
       </main>
     </SidebarProvider>
   );
