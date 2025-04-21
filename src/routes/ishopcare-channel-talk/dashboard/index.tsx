@@ -65,7 +65,7 @@ function RouteComponent() {
     };
   }, []);
 
-  return !auth ? (
+  return auth ? (
     <div className="bg-white text-gray-600 gap-3 p-3 w-full grid grid-rows-[max-content_max-content_1fr] grid-cols-1 h-full">
       {isLoading && (
         <div className="z-[5] absolute inset-0 flex items-center justify-center bg-white bg-opacity-50">
