@@ -16,7 +16,6 @@ import { Toaster } from "@/components/ui/sonner";
 import useStore from "@/store/store";
 import { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Link, Outlet, useRouter } from "@tanstack/react-router";
-import { changeLanguage } from "i18next";
 import { Home, Search } from "lucide-react";
 import { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -57,13 +56,7 @@ const LanguageList: {
 function RootComponent() {
   const currentTitle = useStore((state) => state.currentTitle);
   const setCurrentTitle = useStore((state) => state.setCurrentTitle);
-  const { t, i18n } = useTranslation("common");
-
-  const handleChangeLanguage = (language: Language) => {
-    changeLanguage(language).then(() => {
-      setCurrentTitleFunc();
-    });
-  };
+  const { t } = useTranslation("common");
 
   const router = useRouter();
 
@@ -79,6 +72,10 @@ function RootComponent() {
       setCurrentTitleFunc();
     });
   }, [router, setCurrentTitleFunc]);
+
+  useEffect(() => {
+    console.log("is production : ", import.meta.env.VITE_IS_PRODUCTION);
+  }, []);
 
   return (
     <SidebarProvider>

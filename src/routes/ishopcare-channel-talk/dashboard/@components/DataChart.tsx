@@ -201,7 +201,7 @@ const DataChart: React.FC<DataChartProps> = ({ data, title, selectedDate, type =
     }
   }, [data]);
 
-  return <div ref={chartRef} style={{ width: "100%", height: "500px" }} />;
+  return <div className="max-w-[1000px]" ref={chartRef} style={{ width: "100%", height: "500px" }} />;
 };
 
 export default DataChart;

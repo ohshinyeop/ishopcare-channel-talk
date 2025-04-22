@@ -54,6 +54,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
       return tags.some((tag) => {
         const regex = /^\d{4}([가-힣]{2})$/;
         const match = tag.match(regex);
+
         if (match) {
           const word = match[0];
           if (word) {
@@ -63,6 +64,9 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
             const wordDateNum = parseInt(wordDate, 10);
             const dateStartNum = parseInt(dateStart, 10);
             const dateEndNum = parseInt(dateEnd, 10);
+
+            //앞 3글자가 검수/ 이면 제외하기
+
             if (wordDateNum >= dateStartNum && wordDateNum <= dateEndNum) {
               return true;
             }
@@ -126,21 +130,25 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
     const count: Record<string, number> = {};
     filteredData.forEach((item) => {
       const tags = item.tags?.split(", ") || [];
-      tags.forEach((tag) => {
-        // 모든 태그를 가져와서 카운트
-        const tagList = tag.split(", ");
-        tagList.forEach((tag) => {
-          // mmddMY_TEAM_NAME으로
-          // if (tag.match(/^\d{4}([가-힣]{2})$/)) {
-          if (tag.match(/^\d{4}([가-힣]{2})$/)) {
-            return;
-          } else if (count[tag]) {
-            count[tag]++;
-          } else {
-            count[tag] = 1;
-          }
+      tags
+        .filter((tag) => {
+          return tag.startsWith("검수") === false;
+        })
+        .forEach((tag) => {
+          // 모든 태그를 가져와서 카운트
+          const tagList = tag.split(", ");
+          tagList.forEach((tag) => {
+            // mmddMY_TEAM_NAME으로
+            // if (tag.match(/^\d{4}([가-힣]{2})$/)) {
+            if (tag.match(/^\d{4}([가-힣]{2})$/)) {
+              return;
+            } else if (count[tag]) {
+              count[tag]++;
+            } else {
+              count[tag] = 1;
+            }
+          });
         });
-      });
     });
     return Object.entries(count).map(([key, value]) => ({
       tag: key,
@@ -290,7 +298,6 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   }, [selectedDate]);
 
   useEffect(() => {
-    console.log("filteredData", filteredData);
     if (filteredData.length !== 0) {
       generalTagTable.toggleAllRowsSelected(true);
       peopleTable.toggleAllRowsSelected(true);
@@ -306,7 +313,6 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
 
   useEffect(() => {
     const groupedData: { [key: string]: number } = {};
-    console.log("peopleTable", peopleTable);
     peopleTable
       .getRowModel()
       .rows.filter((row) => row.getIsSelected())
@@ -315,7 +321,6 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
         const count = row.getValue("count") as number;
         const date = tag.substring(0, 4); // mmdd 형식으로 앞 4자리만 가져온다
 
-        console.log("tag", tag, "count", count, "date", date);
         if (groupedData[date]) {
           groupedData[date] += count; // 이미 존재하는 날짜는 카운트를 더한다
         } else {
