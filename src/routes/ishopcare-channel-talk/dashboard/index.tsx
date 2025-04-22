@@ -18,13 +18,28 @@ const MY_PASSWORD = "20211120**!!";
 
 function RouteComponent() {
   const [excelData, setExcelData] = useState<TableProps[]>([]);
-  const allHeaders = excelData[0] ? Object.keys(excelData[0]) : [];
+  const allHeaders = excelData.reduce((acc, curr) => {
+    const keys = Object.keys(curr);
+    if (keys.length > acc.length) {
+      return keys;
+    }
+    return acc;
+  }, [] as string[]);
+  // excelData[0] ? Object.keys(excelData[0]) : [];
   const [excelHeaders, setExcelHeaders] = useState<string[]>([]);
   const isLoading = useStore((state) => state.isLoading);
 
   useEffect(() => {
     if (excelData.length > 0) {
-      setExcelHeaders(excelData[0] ? Object.keys(excelData[0]) : []);
+      setExcelHeaders(
+        excelData.reduce((acc, curr) => {
+          const keys = Object.keys(curr);
+          if (keys.length > acc.length) {
+            return keys;
+          }
+          return acc;
+        }, [] as string[]),
+      );
     }
   }, [excelData]);
 

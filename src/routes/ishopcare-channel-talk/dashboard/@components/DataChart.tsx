@@ -28,7 +28,7 @@ const DataChart: React.FC<DataChartProps> = ({ data, title, selectedDate, type =
         grid: {
           left: "3%",
           right: "4%",
-          bottom: "3%",
+          bottom: "10%",
           containLabel: true,
         },
         toolbox: {
@@ -74,6 +74,15 @@ const DataChart: React.FC<DataChartProps> = ({ data, title, selectedDate, type =
         yAxis: {
           type: "value",
         },
+        dataZoom: [
+          {
+            type: "slider",
+            start: data.length > 40 ? 50 : 0,
+          },
+          {
+            type: "inside",
+          },
+        ],
         series: [
           {
             data: data.map((item) => item.count),
@@ -102,6 +111,13 @@ const DataChart: React.FC<DataChartProps> = ({ data, title, selectedDate, type =
           subtextStyle: {
             fontSize: 16,
             color: "#333",
+          },
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            mark: { show: true },
+            saveAsImage: { show: true },
           },
         },
         tooltip: {

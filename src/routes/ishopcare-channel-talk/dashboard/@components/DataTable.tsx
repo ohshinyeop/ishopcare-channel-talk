@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { MultiSelect } from "@/components/ui/multi-select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { TableProps } from "@/routes/ishopcare-channel-talk/dashboard/@type/type";
@@ -288,6 +289,67 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
     peopleTable.toggleAllRowsSelected(true);
   }, [selectedDate]);
 
+  useEffect(() => {
+    console.log("filteredData", filteredData);
+    if (filteredData.length !== 0) {
+      generalTagTable.toggleAllRowsSelected(true);
+      peopleTable.toggleAllRowsSelected(true);
+    }
+  }, [filteredData]);
+
+  const [daysData, setDaysData] = useState<
+    {
+      tag: string;
+      count: number;
+    }[]
+  >([]);
+
+  useEffect(() => {
+    const groupedData: { [key: string]: number } = {};
+    console.log("peopleTable", peopleTable);
+    peopleTable
+      .getRowModel()
+      .rows.filter((row) => row.getIsSelected())
+      .forEach((row) => {
+        const tag = row.getValue("tag") as string;
+        const count = row.getValue("count") as number;
+        const date = tag.substring(0, 4); // mmdd 형식으로 앞 4자리만 가져온다
+
+        console.log("tag", tag, "count", count, "date", date);
+        if (groupedData[date]) {
+          groupedData[date] += count; // 이미 존재하는 날짜는 카운트를 더한다
+        } else {
+          groupedData[date] = count; // 새로운 날짜는 카운트를 추가한다
+        }
+      });
+
+    setDaysData(
+      Object.entries(groupedData)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([tag, count]) => ({
+          tag,
+          count,
+        }))
+        .sort((a, b) => a.tag.localeCompare(b.tag, undefined, { numeric: true })),
+    );
+  }, [peopleTable, peopleTable.getSelectedRowModel()]);
+
+  // team selector #1
+  const [selectedTeams, setSelectedTeams] = React.useState<string[]>([]);
+  const optionsTeams = MY_TEAM_NAME.map((name) => ({
+    value: name,
+    label: name,
+  }));
+
+  // team selector #2
+  const [selectedTeamsTwo, setSelectedTeamsTwo] = React.useState<string[]>([]);
+
+  // team selector #3
+  const [selectedTeamsThree, setSelectedTeamsThree] = React.useState<string[]>([]);
+
+  // team selector #4
+  const [selectedTeamsFour, setSelectedTeamsFour] = React.useState<string[]>([]);
+
   return (
     <div className="w-full h-full overflow-auto flex flex-col gap-3">
       <div className="w-full gap-3 flex">
@@ -343,6 +405,40 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
             />
           </PopoverContent>
         </Popover>
+        <div className="grid grid-cols-[1fr_1.5fr_1fr_1.5fr_1fr_1.5fr] w-full gap-1 items-center justify-center">
+          <div className="text-center">반차</div>
+          <MultiSelect
+            options={optionsTeams}
+            selected={selectedTeams}
+            onChange={setSelectedTeams}
+            placeholder="-"
+            emptyText="-"
+          />
+          <div className="text-center">연차</div>
+          <MultiSelect
+            options={optionsTeams}
+            selected={selectedTeamsTwo}
+            onChange={setSelectedTeamsTwo}
+            placeholder="-"
+            emptyText="-"
+          />
+          <div className="text-center">시간차</div>
+          <MultiSelect
+            options={optionsTeams}
+            selected={selectedTeamsThree}
+            onChange={setSelectedTeamsThree}
+            placeholder="-"
+            emptyText="-"
+          />
+          <div className="text-nowrap text-center">스레드팔로업</div>
+          <MultiSelect
+            options={optionsTeams}
+            selected={selectedTeamsFour}
+            onChange={setSelectedTeamsFour}
+            placeholder="-"
+            emptyText="-"
+          />
+        </div>
       </div>
       {tableDataGeneralTags.length > 0 ? (
         <div className="wf-full grid grid-cols-[max-content_1fr] gap-3">
@@ -491,11 +587,11 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
             </Table>
           </div>
           <div className="wf-full flex flex-col gap-3">
+            <Card className="p-3 w-full h-full flex flex-col">
+              <DataChartPeopleDays daysData={daysData} selectedDate={selectedDate} />
+            </Card>
             <Card>
               <DataChartPeople peopleTable={peopleTable} selectedDate={selectedDate} />
-            </Card>
-            <Card className="p-3 w-full h-full flex flex-col">
-              <DataChartPeopleDays peopleTable={peopleTable} selectedDate={selectedDate} />
             </Card>
           </div>
         </div>

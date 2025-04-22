@@ -16,7 +16,7 @@ export const DataChartGeneralTags = ({ generalTagTable, selectedDate }: Props) =
   return (
     <DataChart
       selectedDate={selectedDate}
-      title="일별 채널톡 파트 응답수"
+      title="일별 채널톡 태그 분류"
       data={
         // peopleTable 중에서 row.getIsSelected()인 것들만
         generalTagTable

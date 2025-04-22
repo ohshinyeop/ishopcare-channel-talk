@@ -16,7 +16,8 @@ export const DataChartPeople = ({ peopleTable, selectedDate }: Props) => {
   return (
     <DataChart
       selectedDate={selectedDate}
-      title="일별 채널톡 파트 응답수"
+      title="개인별 채널톡 응답수"
+      type="line"
       data={
         // peopleTable 중에서 row.getIsSelected()인 것들만
         peopleTable
@@ -30,7 +31,7 @@ export const DataChartPeople = ({ peopleTable, selectedDate }: Props) => {
               count: count as number,
             };
           })
-          .sort((a, b) => a.count - b.count)
+          .sort((a, b) => a.tag.localeCompare(b.tag, undefined, { numeric: true }))
       }
     ></DataChart>
   );
