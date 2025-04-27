@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import ErrorPage from "@/components/commons/ErrorPage";
 import LoadingPage from "@/components/commons/LoadingPage";
 
 export const Route = createFileRoute("/ishopcare-channel-talk/")({
   component: HomeComponent,
   pendingComponent: () => <LoadingPage />,
+  errorComponent: () => <ErrorPage error={new Error("somthing went wrong")} filePath={import.meta.url} />,
 });
 
 function HomeComponent() {

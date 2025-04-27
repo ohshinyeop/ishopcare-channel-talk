@@ -45,14 +45,6 @@ const NAVI_LINKS: {
   },
 ];
 
-const LanguageList: {
-  label: string;
-  key: Language;
-}[] = [
-  { label: "Korean", key: "ko" },
-  { label: "English", key: "en" },
-];
-
 function RootComponent() {
   const currentTitle = useStore((state) => state.currentTitle);
   const setCurrentTitle = useStore((state) => state.setCurrentTitle);

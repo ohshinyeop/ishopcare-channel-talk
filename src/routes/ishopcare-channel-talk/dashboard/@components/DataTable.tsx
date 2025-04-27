@@ -20,6 +20,7 @@ import { MultiSelect } from "@/components/ui/multi-select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { TableProps } from "@/routes/ishopcare-channel-talk/dashboard/@type/type";
+import { DailyCountReport } from "./DailyCountReport";
 import { DataChartGeneralTags } from "./DataChartGeneralTags";
 import { DataChartGeneralTagsTop } from "./DataChartGeneralTagsTop";
 import { DataChartPeople } from "./DataChartPeople";
@@ -328,15 +329,15 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
         }
       });
 
-    setDaysData(
-      Object.entries(groupedData)
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([tag, count]) => ({
-          tag,
-          count,
-        }))
-        .sort((a, b) => a.tag.localeCompare(b.tag, undefined, { numeric: true })),
-    );
+    const data = Object.entries(groupedData)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([tag, count]) => ({
+        tag,
+        count,
+      }))
+      .sort((a, b) => a.tag.localeCompare(b.tag, undefined, { numeric: true }));
+    console.log("data", data);
+    setDaysData(data);
   }, [peopleTable, peopleTable.getSelectedRowModel()]);
 
   // team selector #1
@@ -598,6 +599,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
             <Card>
               <DataChartPeople peopleTable={peopleTable} selectedDate={selectedDate} />
             </Card>
+            <DailyCountReport daysData={daysData} />
           </div>
         </div>
       ) : (
