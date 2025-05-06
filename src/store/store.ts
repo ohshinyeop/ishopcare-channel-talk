@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { TableProps } from "@/routes/ishopcare-channel-talk/dashboard/@type/type";
+
 
 // 일반 스토어를 생성
 
@@ -10,6 +12,21 @@ type ExStore = {
 
   isLoading: boolean;
   setLoading: (isLoading: boolean) => void;
+
+  // const [excelData, setExcelData] = useState<TableProps[]>([]);
+  excelData: TableProps[];
+  setExcelData: (data: TableProps[]) => void;
+
+  files: File[];
+  setFiles: (files: File[]) => void;
+
+  daysData: {
+    tag: string;
+    count: number;
+  }[];
+  setDaysData: (data: { tag: string; count: number }[]) => void;
+
+
 };
 
 const useStore = create<ExStore>((set) => ({
@@ -20,6 +37,15 @@ const useStore = create<ExStore>((set) => ({
 
   isLoading: false,
   setLoading: (isLoading: boolean) => set({ isLoading: isLoading }),
+
+  excelData: [],
+  setExcelData: (data: TableProps[]) => set({ excelData: data }),
+
+  files: [],
+  setFiles: (files: File[]) => set({ files: files }),
+
+  daysData: [],
+  setDaysData: (data: { tag: string; count: number }[]) => set({ daysData: data }),
 }));
 
 export default useStore;

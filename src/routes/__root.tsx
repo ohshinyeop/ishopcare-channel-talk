@@ -16,7 +16,7 @@ import { Toaster } from "@/components/ui/sonner";
 import useStore from "@/store/store";
 import { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Link, Outlet, useRouter } from "@tanstack/react-router";
-import { Home, Search } from "lucide-react";
+import { Home, Monitor, Search } from "lucide-react";
 import { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -42,6 +42,11 @@ const NAVI_LINKS: {
     to: "/ishopcare-channel-talk/dashboard",
     label: "대시보드",
     icon: Search,
+  },
+  {
+    to: "/ishopcare-channel-talk/report",
+    label: "리포트",
+    icon: Monitor,
   },
 ];
 

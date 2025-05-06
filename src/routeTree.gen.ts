@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IshopcareChannelTalkIndexImport } from './routes/ishopcare-channel-talk/index'
+import { Route as IshopcareChannelTalkReportIndexImport } from './routes/ishopcare-channel-talk/report/index'
 import { Route as IshopcareChannelTalkDashboardIndexImport } from './routes/ishopcare-channel-talk/dashboard/index'
 
 // Create/Update Routes
@@ -21,6 +22,13 @@ const IshopcareChannelTalkIndexRoute = IshopcareChannelTalkIndexImport.update({
   path: '/ishopcare-channel-talk/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const IshopcareChannelTalkReportIndexRoute =
+  IshopcareChannelTalkReportIndexImport.update({
+    id: '/ishopcare-channel-talk/report/',
+    path: '/ishopcare-channel-talk/report/',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 const IshopcareChannelTalkDashboardIndexRoute =
   IshopcareChannelTalkDashboardIndexImport.update({
@@ -47,6 +55,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IshopcareChannelTalkDashboardIndexImport
       parentRoute: typeof rootRoute
     }
+    '/ishopcare-channel-talk/report/': {
+      id: '/ishopcare-channel-talk/report/'
+      path: '/ishopcare-channel-talk/report'
+      fullPath: '/ishopcare-channel-talk/report'
+      preLoaderRoute: typeof IshopcareChannelTalkReportIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -55,40 +70,52 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/ishopcare-channel-talk': typeof IshopcareChannelTalkIndexRoute
   '/ishopcare-channel-talk/dashboard': typeof IshopcareChannelTalkDashboardIndexRoute
+  '/ishopcare-channel-talk/report': typeof IshopcareChannelTalkReportIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/ishopcare-channel-talk': typeof IshopcareChannelTalkIndexRoute
   '/ishopcare-channel-talk/dashboard': typeof IshopcareChannelTalkDashboardIndexRoute
+  '/ishopcare-channel-talk/report': typeof IshopcareChannelTalkReportIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/ishopcare-channel-talk/': typeof IshopcareChannelTalkIndexRoute
   '/ishopcare-channel-talk/dashboard/': typeof IshopcareChannelTalkDashboardIndexRoute
+  '/ishopcare-channel-talk/report/': typeof IshopcareChannelTalkReportIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/ishopcare-channel-talk' | '/ishopcare-channel-talk/dashboard'
+  fullPaths:
+    | '/ishopcare-channel-talk'
+    | '/ishopcare-channel-talk/dashboard'
+    | '/ishopcare-channel-talk/report'
   fileRoutesByTo: FileRoutesByTo
-  to: '/ishopcare-channel-talk' | '/ishopcare-channel-talk/dashboard'
+  to:
+    | '/ishopcare-channel-talk'
+    | '/ishopcare-channel-talk/dashboard'
+    | '/ishopcare-channel-talk/report'
   id:
     | '__root__'
     | '/ishopcare-channel-talk/'
     | '/ishopcare-channel-talk/dashboard/'
+    | '/ishopcare-channel-talk/report/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IshopcareChannelTalkIndexRoute: typeof IshopcareChannelTalkIndexRoute
   IshopcareChannelTalkDashboardIndexRoute: typeof IshopcareChannelTalkDashboardIndexRoute
+  IshopcareChannelTalkReportIndexRoute: typeof IshopcareChannelTalkReportIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IshopcareChannelTalkIndexRoute: IshopcareChannelTalkIndexRoute,
   IshopcareChannelTalkDashboardIndexRoute:
     IshopcareChannelTalkDashboardIndexRoute,
+  IshopcareChannelTalkReportIndexRoute: IshopcareChannelTalkReportIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -102,7 +129,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/ishopcare-channel-talk/",
-        "/ishopcare-channel-talk/dashboard/"
+        "/ishopcare-channel-talk/dashboard/",
+        "/ishopcare-channel-talk/report/"
       ]
     },
     "/ishopcare-channel-talk/": {
@@ -110,6 +138,9 @@ export const routeTree = rootRoute
     },
     "/ishopcare-channel-talk/dashboard/": {
       "filePath": "ishopcare-channel-talk/dashboard/index.tsx"
+    },
+    "/ishopcare-channel-talk/report/": {
+      "filePath": "ishopcare-channel-talk/report/index.tsx"
     }
   }
 }

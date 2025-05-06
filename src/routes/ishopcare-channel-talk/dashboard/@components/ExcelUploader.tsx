@@ -5,16 +5,16 @@ import { TableProps } from "@/routes/ishopcare-channel-talk/dashboard/@type/type
 import useStore from "@/store/store";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { FileUp } from "lucide-react";
-import React from "react";
 import * as XLSX from "xlsx";
 
 interface Props {
-  setExcelData: React.Dispatch<React.SetStateAction<TableProps[]>>;
+  setExcelData: (data: TableProps[]) => void;
 }
 
 const ExcelUploader = ({ setExcelData }: Props) => {
-  const [files, setFiles] = React.useState<File[]>([]);
   const setLoading = useStore((state) => state.setLoading);
+  const files = useStore((state) => state.files);
+  const setFiles = useStore((state) => state.setFiles);
 
   const handleFileUpload = async (file: File[] | null) => {
     setLoading(true);
@@ -75,7 +75,7 @@ const ExcelUploader = ({ setExcelData }: Props) => {
           </FileInput>
           {files.length > 0 && (
             <FileUploaderContent className="flex items-center h-full">
-              <div className="p-3 flex w-full h-full gap-3 justify-center">
+              <div className="p-3 flex w-full h-full gap-3 justify-center items-center">
                 <div className="w-fit">
                   <div className="text-sm text-gray-500">{files[0]?.name}</div>
                 </div>

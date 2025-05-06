@@ -20,7 +20,7 @@ import { MultiSelect } from "@/components/ui/multi-select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { TableProps } from "@/routes/ishopcare-channel-talk/dashboard/@type/type";
-import { DailyCountReport } from "./DailyCountReport";
+import useStore from "@/store/store";
 import { DataChartGeneralTags } from "./DataChartGeneralTags";
 import { DataChartGeneralTagsTop } from "./DataChartGeneralTagsTop";
 import { DataChartPeople } from "./DataChartPeople";
@@ -30,7 +30,7 @@ interface DataTableProps {
   data: TableProps[];
 }
 
-const MY_TEAM_NAME = ["슬기", "동민", "보라", "지은", "세훈", "인섭", "소라", "선민"];
+const MY_TEAM_NAME = ["슬기", "동민", "보라", "지은", "세훈", "인섭", "소라"];
 
 const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const [selectedDate, setSelectedDate] = useState<{
@@ -305,12 +305,14 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
     }
   }, [filteredData]);
 
-  const [daysData, setDaysData] = useState<
-    {
-      tag: string;
-      count: number;
-    }[]
-  >([]);
+  // const [daysData, setDaysData] = useState<
+  //   {
+  //     tag: string;
+  //     count: number;
+  //   }[]
+  // >([]);
+  const setDaysData = useStore((state) => state.setDaysData);
+  const daysData = useStore((state) => state.daysData);
 
   useEffect(() => {
     const groupedData: { [key: string]: number } = {};
@@ -336,7 +338,6 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
         count,
       }))
       .sort((a, b) => a.tag.localeCompare(b.tag, undefined, { numeric: true }));
-    console.log("data", data);
     setDaysData(data);
   }, [peopleTable, peopleTable.getSelectedRowModel()]);
 
@@ -447,10 +448,10 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
         </div>
       </div>
       {tableDataGeneralTags.length > 0 ? (
-        <div className="wf-full grid grid-cols-[max-content_1fr] gap-3">
+        <div className="wf-full grid grid-cols-[1fr_3fr] gap-3">
           {/* <DataChartGeneralTags selectedDate={selectedDate} filteredData={filteredData} />
           <DataChartPeople selectedDate={selectedDate} filteredData={filteredData} /> */}
-          <div className="border border-gray-300 rounded-md overflow-y-hidden">
+          <div className="border border-gray-300 rounded-md overflow-y-hidden w-full">
             <Table>
               <TableHeader>
                 {generalTagTable.getHeaderGroups().map((headerGroup) => (
@@ -519,9 +520,11 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
             </Table>
           </div>
           <div className="wf-full flex flex-col gap-3">
+            {/* 일별 채널톡 태그 분류 */}
             <Card>
               <DataChartGeneralTags generalTagTable={generalTagTable} selectedDate={selectedDate} />
             </Card>
+            {/* 최다 문의 top5 */}
             <Card className="p-3 w-full h-full flex flex-col">
               <DataChartGeneralTagsTop generalTagTable={generalTagTable} selectedDate={selectedDate} />
             </Card>
@@ -594,12 +597,13 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
           </div>
           <div className="wf-full flex flex-col gap-3">
             <Card className="p-3 w-full h-full flex flex-col">
+              {/* 채널톡 파트 응답수 */}
               <DataChartPeopleDays daysData={daysData} selectedDate={selectedDate} />
             </Card>
             <Card>
-              <DataChartPeople peopleTable={peopleTable} selectedDate={selectedDate} />
+              {/* 개인별 채널톡 응답수 */}
+              <DataChartPeople peopleTable={peopleTable} selectedDate={selectedDate} teams={MY_TEAM_NAME} />
             </Card>
-            <DailyCountReport daysData={daysData} />
           </div>
         </div>
       ) : (

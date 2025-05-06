@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import DataSelector from "@/routes/ishopcare-channel-talk/dashboard/@components/DataSelector";
 import DataTable from "@/routes/ishopcare-channel-talk/dashboard/@components/DataTable";
 import ExcelUploader from "@/routes/ishopcare-channel-talk/dashboard/@components/ExcelUploader";
-import { TableProps } from "@/routes/ishopcare-channel-talk/dashboard/@type/type";
 import useStore from "@/store/store";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -17,7 +16,10 @@ export const Route = createFileRoute("/ishopcare-channel-talk/dashboard/")({
 const MY_PASSWORD = "20211120**!!";
 
 function RouteComponent() {
-  const [excelData, setExcelData] = useState<TableProps[]>([]);
+  // const [excelData, setExcelData] = useState<TableProps[]>([]);
+  const excelData = useStore((state) => state.excelData);
+  const setExcelData = useStore((state) => state.setExcelData);
+
   const allHeaders = excelData.reduce((acc, curr) => {
     const keys = Object.keys(curr);
     if (keys.length > acc.length) {
@@ -73,14 +75,14 @@ function RouteComponent() {
 
   useEffect(() => {
     setInputPassword("");
-    setExcelData([]);
+    // setExcelData([]);
     return () => {
       setInputPassword("");
-      setExcelData([]);
+      // setExcelData([]);
     };
   }, []);
 
-  return auth ? (
+  return !auth ? (
     <div className="bg-white text-gray-600 gap-3 p-3 w-full grid grid-rows-[max-content_max-content_1fr] grid-cols-1 h-full">
       {isLoading && (
         <div className="z-[5] absolute inset-0 flex items-center justify-center bg-white bg-opacity-50">

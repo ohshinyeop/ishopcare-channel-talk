@@ -39,19 +39,19 @@ import { toast } from "sonner";
 //     },
 //   },
 
-const postDays = async (data: {
-  date: Date;
-  responseCount: number;
-}) => {
+const postPeople = async (data: {
+  tag: string;
+  count: number;
+}[]) => {
+  console.log("postPeople", data);
   const res = await fetch(
     "https://script.google.com/macros/s/AKfycbymRirdFon_n0WYZmnmVtaWD-KF_ZJGXH5UrefTtCbE8TuMsmeI_HVZUxyevl5M71pD/exec",
     {
       redirect: "follow",
       method: "POST",
-      // body: JSON.stringify(data),
       body: JSON.stringify({
-        days: data,
-        type: "postDays"
+        people: data,
+        type: "postPeople"
       }),
       headers: {
         "Content-Type": "text/plain;charset=utf-8",
@@ -64,13 +64,13 @@ const postDays = async (data: {
 
   return res;
 }
-export const usePostDaysQuery = () => {
+export const usePostPoepleQuery = () => {
 
   return useMutation({
     mutationFn: (data: {
-      date: Date;
-      responseCount: number;
-    }) => postDays(data),
+      tag: string;
+      count: number;
+    }[]) => postPeople(data),
 
   });
 };

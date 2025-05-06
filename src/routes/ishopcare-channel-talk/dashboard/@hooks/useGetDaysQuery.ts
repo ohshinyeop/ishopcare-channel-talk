@@ -16,7 +16,7 @@ const getDays = async () => {
 };
 export const useGetDaysQuery = () => {
   return useQuery<
-    []
+    any
   >({
     queryKey: ["days"],
     queryFn: () => getDays(),
