@@ -1,7 +1,17 @@
+import { formatDate } from "date-fns";
 import * as echarts from "echarts";
 import { useEffect, useRef } from "react";
 
-export const DataChartDaysSpreadSheets = ({ sheetData }: { sheetData: [] | undefined }) => {
+export const DataChartDaysSpreadSheets = ({
+  sheetData,
+  selectedDate,
+}: {
+  sheetData: [] | undefined;
+  selectedDate: {
+    startDate: Date;
+    endDate: Date;
+  };
+}) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -19,6 +29,7 @@ export const DataChartDaysSpreadSheets = ({ sheetData }: { sheetData: [] | undef
           left: "3%",
           right: "4%",
           bottom: "10%",
+          top: "20%",
           containLabel: true,
         },
         toolbox: {
@@ -45,18 +56,16 @@ export const DataChartDaysSpreadSheets = ({ sheetData }: { sheetData: [] | undef
             color: "#333",
           },
           subtext: `[${
-            sheetData
-              ?.filter((_, index) => index !== 0)
-              .map((item) => {
-                const date = new Date(item[0]);
-                return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
-                  date.getDate(),
-                ).padStart(2, "0")}`;
-              })[0] ?? ""
+            sheetData?.map((item) => {
+              const date = new Date(item[0]);
+              return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
+                date.getDate(),
+              ).padStart(2, "0")}`;
+            })[0] ?? ""
           } ~ ${
             sheetData
-              ?.filter((_, index) => index !== 0)
-              .map((item) => {
+              // ?.filter((_, index) => index !== 0)
+              ?.map((item) => {
                 const date = new Date(item[0]);
                 return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
                   date.getDate(),
@@ -72,14 +81,15 @@ export const DataChartDaysSpreadSheets = ({ sheetData }: { sheetData: [] | undef
         },
         xAxis: {
           type: "category",
-          data: sheetData
-            ?.filter((_, index) => index !== 0)
-            .map((item) => {
-              const date = new Date(item[0]);
-              return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
-                date.getDate(),
-              ).padStart(2, "0")}`;
-            }),
+          data: sheetData?.map((item) => {
+            return formatDate(new Date(item[0]), "yyyy-MM-dd");
+          }),
+          // .map((item) => {
+          //   const date = new Date(item[0]);
+          //   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
+          //     date.getDate(),
+          //   ).padStart(2, "0")}`;
+          // }),
           axisLabel: {
             interval: 0,
             fontSize: 14,
@@ -92,7 +102,7 @@ export const DataChartDaysSpreadSheets = ({ sheetData }: { sheetData: [] | undef
         },
         series: [
           {
-            data: sheetData?.filter((_, index) => index !== 0).map((item) => item[1]),
+            data: sheetData?.map((item) => item[1]),
             type: "line",
             color: ["#3182F6"],
             label: {

@@ -1,7 +1,16 @@
 import * as echarts from "echarts";
 import { useEffect, useRef } from "react";
 
-export const DataChartPeopleSpreadSheets = ({ sheetData }: { sheetData: { [key: string]: any }[] }) => {
+export const DataChartPeopleSpreadSheets = ({
+  sheetData,
+  selectedDate,
+}: {
+  sheetData: { [key: string]: any }[];
+  selectedDate: {
+    startDate: Date;
+    endDate: Date;
+  };
+}) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -43,6 +52,7 @@ export const DataChartPeopleSpreadSheets = ({ sheetData }: { sheetData: { [key: 
           left: "3%",
           right: "4%",
           bottom: "10%",
+          top: "20%",
           containLabel: true,
         },
         toolbox: {
@@ -61,8 +71,9 @@ export const DataChartPeopleSpreadSheets = ({ sheetData }: { sheetData: { [key: 
           data: xAxisData,
           axisLabel: {
             interval: 0,
+            fontSize: 14,
             rotate: 35,
-            fontSize: 12,
+            margin: 20,
           },
         },
         title: {
