@@ -172,7 +172,7 @@ function RootComponent() {
           <Separator orientation="vertical" className="mr-2 h-4" />
           {currentTitle}
         </div>
-        {!auth ? (
+        {auth ? (
           <Outlet />
         ) : (
           <div className="flex flex-col items-center justify-center w-full h-full">
